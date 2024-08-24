@@ -1,1 +1,2 @@
-
+To run the fashion style detector first of all download the trained model via this link - https://drive.google.com/file/d/1t-jY5GjqfwMlrYrcEPkdYeID0XOr35BN/view?usp=drive_link
+And then paste it into the fashion style detector folder with the name fashion_style_classifier_v7.pth
