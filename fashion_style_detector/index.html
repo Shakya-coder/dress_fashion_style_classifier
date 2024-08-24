@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Style Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fashion Style Predictor</h1>
+    <form id="upload-form">
+        <input type="file" id="file-input" name="image" accept="image/*" required>
+        <button type="submit">Upload Image</button>
+    </form>
+    <div class="result" id="result"></div>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('file-input');
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                
+                // Display the result
+                document.getElementById('result').innerHTML = `
+                    <h2>Prediction Result:</h2>
+                    <p><strong>Predicted Class:</strong> ${result.predicted_class}</p>
+                    <p><strong>Probability:</strong> ${result.probability.toFixed(2)}%</p>
+                    <p><strong>Description:</strong> ${result.description}</p>
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
